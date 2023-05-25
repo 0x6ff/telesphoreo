@@ -1,0 +1,33 @@
+diff -ru libffi-3.0.10/src/arm/sysv.S libffi-3.0.10+iPhone/src/arm/sysv.S
+--- libffi-3.0.10/src/arm/sysv.S	2011-08-23 14:27:24.000000000 +0000
++++ libffi-3.0.10+iPhone/src/arm/sysv.S	2012-03-18 22:32:12.000000000 +0000
+@@ -335,7 +335,9 @@
+ 
+ /* Below are VFP hard-float ABI call and closure implementations.
+    Add VFP FPU directive here. */
++#ifndef __APPLE__
+ 	.fpu	vfp
++#endif
+ 
+ 	@ r0:   fn
+ 	@ r1:   &ecif
+@@ -428,7 +430,9 @@
+ 
+ .ffi_call_VFP_end:
+ 	UNWIND .fnend
++#ifdef __ELF__
+         .size    CNAME(ffi_call_VFP),.ffi_call_VFP_end-CNAME(ffi_call_VFP)
++#endif
+ 
+ 
+ ARM_FUNC_START ffi_closure_VFP
+@@ -490,7 +494,9 @@
+ 
+ .ffi_closure_VFP_end:
+ 	UNWIND .fnend
++#ifdef __ELF__
+         .size    CNAME(ffi_closure_VFP),.ffi_closure_VFP_end-CNAME(ffi_closure_VFP)
++#endif
+ 
+ #if defined __ELF__ && defined __linux__
+ 	.section	.note.GNU-stack,"",%progbits

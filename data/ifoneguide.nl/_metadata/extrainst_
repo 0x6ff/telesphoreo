@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [[ $1 == upgrade ]]; then
+    /usr/bin/apt-key del A99404CB
+fi
+
+if [[ $1 == install || $1 == upgrade ]]; then
+    /usr/bin/apt-key add /usr/share/keyrings/ifoneguide.nl-keyring.gpg
+fi

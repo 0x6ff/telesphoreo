@@ -1,0 +1,24 @@
+diff -ru libffi-3.0.10/Makefile.am libffi-3.0.10+iPhone/Makefile.am
+--- libffi-3.0.10/Makefile.am	2011-08-23 14:28:04.000000000 +0000
++++ libffi-3.0.10+iPhone/Makefile.am	2012-03-19 00:29:07.000000000 +0000
+@@ -178,7 +178,7 @@
+ libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
+ nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
+ 
+-AM_CFLAGS = -g
++AM_CFLAGS = 
+ if FFI_DEBUG
+ # Build debug. Define FFI_DEBUG on the commandline so that, when building with
+ # MSVC, it can link against the debug CRT.
+diff -ru libffi-3.0.10/Makefile.in libffi-3.0.10+iPhone/Makefile.in
+--- libffi-3.0.10/Makefile.in	2011-08-23 14:28:35.000000000 +0000
++++ libffi-3.0.10+iPhone/Makefile.in	2012-03-19 00:29:18.000000000 +0000
+@@ -501,7 +501,7 @@
+ 	$(am__append_24) $(am__append_25) $(am__append_26)
+ libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
+ nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
+-AM_CFLAGS = -g $(am__append_27)
++AM_CFLAGS = $(am__append_27)
+ libffi_la_LDFLAGS = -version-info `grep -v '^\#' $(srcdir)/libtool-version` $(LTLDFLAGS) $(AM_LTLDFLAGS)
+ AM_CPPFLAGS = -I. -I$(top_srcdir)/include -Iinclude -I$(top_srcdir)/src
+ AM_CCASFLAGS = $(AM_CPPFLAGS)

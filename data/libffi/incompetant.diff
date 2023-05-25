@@ -1,0 +1,103 @@
+diff -ru libffi-3.0.10/include/ffi.h.in libffi-3.0.10+iPhone/include/ffi.h.in
+--- libffi-3.0.10/include/ffi.h.in	2011-08-23 14:28:00.000000000 +0000
++++ libffi-3.0.10+iPhone/include/ffi.h.in	2012-03-18 23:19:19.000000000 +0000
+@@ -274,7 +274,16 @@
+ __declspec(align(8))
+ #endif
+ typedef struct {
++union {
++#if @FFI_EXEC_TRAMPOLINE_TABLE@
++    struct {
++      void *trampoline_table;
++      void *trampoline_table_entry;
++    };
++#endif
+   char tramp[FFI_TRAMPOLINE_SIZE];
++};
++
+   ffi_cif   *cif;
+   void     (*fun)(ffi_cif*,void*,void**,void*);
+   void      *user_data;
+@@ -307,7 +316,15 @@
+ # pragma pack 8
+ #endif
+ typedef struct {
++union {
++#if @FFI_EXEC_TRAMPOLINE_TABLE@
++    struct {
++      void *trampoline_table;
++      void *trampoline_table_entry;
++    };
++#endif
+   char tramp[FFI_TRAMPOLINE_SIZE];
++};
+ 
+   ffi_cif   *cif;
+ 
+@@ -328,7 +345,15 @@
+ } ffi_raw_closure;
+ 
+ typedef struct {
++union {
++#if @FFI_EXEC_TRAMPOLINE_TABLE@
++    struct {
++      void *trampoline_table;
++      void *trampoline_table_entry;
++    };
++#endif
+   char tramp[FFI_TRAMPOLINE_SIZE];
++};
+ 
+   ffi_cif   *cif;
+ 
+diff -ru libffi-3.0.10/libtool-version libffi-3.0.10+iPhone/libtool-version
+--- libffi-3.0.10/libtool-version	2011-08-22 18:38:12.000000000 +0000
++++ libffi-3.0.10+iPhone/libtool-version	2012-03-18 23:08:29.000000000 +0000
+@@ -26,4 +26,4 @@
+ #    release, then set age to 0.
+ #
+ # CURRENT:REVISION:AGE
+-5:10:0
++4:1:0
+diff -ru libffi-3.0.10/src/arm/ffi.c libffi-3.0.10+iPhone/src/arm/ffi.c
+--- libffi-3.0.10/src/arm/ffi.c	2011-08-23 14:28:04.000000000 +0000
++++ libffi-3.0.10+iPhone/src/arm/ffi.c	2012-03-18 23:15:50.000000000 +0000
+@@ -552,7 +552,7 @@
+   free (closure);
+ }
+ 
+-#else
++#endif
+ 
+ #define FFI_INIT_TRAMPOLINE(TRAMP,FUN,CTX)				\
+ ({ unsigned char *__tramp = (unsigned char*)(TRAMP);			\
+@@ -570,8 +570,6 @@
+                                                     mapping.  */        \
+  })
+ 
+-#endif
+-
+ /* the cif must already be prep'ed */
+ 
+ ffi_status
+@@ -591,13 +589,19 @@
+     return FFI_BAD_ABI;
+     
+ #if FFI_EXEC_TRAMPOLINE_TABLE
++if (closure != codeloc) {
+   void **config = FFI_TRAMPOLINE_CODELOC_CONFIG(codeloc);
+   config[0] = closure;
+   config[1] = closure_func;
+-#else
++} else {
++#endif
++
+   FFI_INIT_TRAMPOLINE (&closure->tramp[0], \
+ 		       closure_func,  \
+ 		       codeloc);
++
++#if FFI_EXEC_TRAMPOLINE_TABLE
++}
+ #endif
+ 
+   closure->cif  = cif;
